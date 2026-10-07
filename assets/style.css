@@ -488,3 +488,19 @@ body.login-locked > *:not(#login-screen) {
     justify-content: center;
     margin-top: 4px;
 }
+
+
+        /* Status sinkronisasi Google Sheets */
+        .sync-status {
+            margin: 0 1rem 1rem;
+            padding: 0.45rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            background: rgba(148, 163, 184, 0.12);
+            color: var(--text-muted);
+        }
+        .sync-ok { background: rgba(16, 185, 129, 0.15); color: var(--success-color); }
+        .sync-loading { background: rgba(99, 102, 241, 0.15); color: #a5b4fc; }
+        .sync-error { background: rgba(239, 68, 68, 0.15); color: var(--danger-color); }
+        .sync-local { background: rgba(245, 158, 11, 0.15); color: var(--warning-color); }
