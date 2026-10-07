@@ -3,7 +3,7 @@
 // Isi dengan URL Web App dari Google Apps Script (berakhiran /exec).
 // Lihat README.txt untuk langkah pembuatannya.
 // ============================================================
-const API_URL = '';
+const API_URL = 'https://script.google.com/macros/s/AKfycbwQl1ZGuRSU9ZWMFoydemvqUHzvTufxQLfY8AjIFGb7Yywu-afl9YNED1vIOOQULC2H/exec';
 
 // Interval pengambilan data terbaru dari Google Sheets (milidetik)
 const SYNC_INTERVAL = 15000;
