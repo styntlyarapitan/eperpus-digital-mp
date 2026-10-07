@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Informasi Perpustakaan Sekolah</title>
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="login-locked">
+    <!-- Simple Login -->
+    <div id="login-screen" aria-label="Login">
+        <div class="login-card">
+            <div class="login-brand">
+                <i class="fa-solid fa-book-bookmark"></i>
+                <h2>E-Perpus</h2>
+                <p>Silakan masuk untuk melanjutkan</p>
+            </div>
+
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-username">Username</label>
+                    <input type="text" id="login-username" class="form-control" autocomplete="username" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" class="form-control" autocomplete="current-password" required>
+                </div>
+
+                <div id="login-error" class="login-error" role="alert"></div>
+
+                <button type="submit" class="btn btn-primary login-submit">
+                    <i class="fa-solid fa-right-to-bracket"></i> Login
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="brand">
+            <i class="fa-solid fa-book-bookmark"></i>
+            <h2>E-Perpus</h2>
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <button class="active" onclick="switchSection('dashboard', this)">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button onclick="switchSection('buku', this)">
+                    <i class="fa-solid fa-book"></i>
+                    <span>Data Buku</span>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button onclick="switchSection('siswa', this)">
+                    <i class="fa-solid fa-users"></i>
+                    <span>Data Siswa</span>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button onclick="switchSection('peminjaman', this)">
+                    <i class="fa-solid fa-hand-holding-hand"></i>
+                    <span>Peminjaman</span>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button onclick="switchSection('pengembalian', this)">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    <span>Pengembalian</span>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button onclick="switchSection('laporan', this)">
+                    <i class="fa-solid fa-file-lines"></i>
+                    <span>Laporan</span>
+                </button>
+            </li>
+        </ul>
+            <li class="nav-item">
+                <button onclick="logout()">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Logout</span>
+                </button>
+            </li>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- DASHBOARD SECTION -->
+        <section id="sec-dashboard" class="content-section active">
+            <div class="header-title">
+                <h1>Dashboard Perpustakaan</h1>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon blue"><i class="fa-solid fa-book"></i></div>
+                    <div class="stat-info">
+                        <h3 id="dash-total-buku">0</h3>
+                        <p>Total Buku</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon green"><i class="fa-solid fa-users"></i></div>
+                    <div class="stat-info">
+                        <h3 id="dash-total-siswa">0</h3>
+                        <p>Siswa Terdaftar</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon orange"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                    <div class="stat-info">
+                        <h3 id="dash-total-dipinjam">0</h3>
+                        <p>Sedang Dipinjam</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon purple"><i class="fa-solid fa-circle-check"></i></div>
+                    <div class="stat-info">
+                        <h3 id="dash-total-kembali">0</h3>
+                        <p>Sudah Dikembalikan</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Aktivitas Peminjaman Terkini</h2>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>Nama Siswa</th>
+                                <th>Judul Buku</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbl-recent-activity">
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- DATA BUKU SECTION -->
+        <section id="sec-buku" class="content-section">
+            <div class="header-title">
+                <h1>Kelola Data Buku</h1>
+                <button class="btn btn-primary" onclick="openModal('modal-buku')">
+                    <i class="fa-solid fa-plus"></i> Tambah Buku
+                </button>
+            </div>
+
+            <div class="card">
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Kode</th>
+                                <th>Judul Buku</th>
+                                <th>Penulis</th>
+                                <th>Jumlah Total</th>
+                                <th>Tersedia</th>
+                                <th>Status</th>
+                                <th class="no-print">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbl-buku">
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- DATA SISWA SECTION -->
+        <section id="sec-siswa" class="content-section">
+            <div class="header-title">
+                <h1>Kelola Data Siswa</h1>
+                <button class="btn btn-primary" onclick="openModal('modal-siswa')">
+                    <i class="fa-solid fa-plus"></i> Tambah Siswa
+                </button>
+            </div>
+
+            <div class="card">
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>NIS</th>
+                                <th>Nama Lengkap</th>
+                                <th>Kelas</th>
+                                <th>No. HP</th>
+                                <th class="no-print">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbl-siswa">
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- PEMINJAMAN SECTION -->
+        <section id="sec-peminjaman" class="content-section">
+            <div class="header-title">
+                <h1>Transaksi Peminjaman</h1>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Form Transaksi Peminjaman Baru</h2>
+                </div>
+                <form id="form-peminjaman" onsubmit="addTransaksi(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Pilih Siswa</label>
+                            <select id="peminjam-siswa" class="form-control" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Pilih Buku</label>
+                            <select id="peminjam-buku" class="form-control" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Tanggal Pinjam</label>
+                            <input type="date" id="peminjam-tanggal" class="form-control" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="margin-top: 10px;">
+                        <i class="fa-solid fa-paper-plane"></i> Proses Peminjaman
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- PENGEMBALIAN SECTION -->
+        <section id="sec-pengembalian" class="content-section">
+            <div class="header-title">
+                <h1>Pengembalian Buku</h1>
+            </div>
+
+            <div class="card">
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tanggal Pinjam</th>
+                                <th>Siswa</th>
+                                <th>Buku</th>
+                                <th>Status</th>
+                                <th class="no-print">Aksi Instant</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbl-pengembalian">
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- LAPORAN SECTION -->
+        <section id="sec-laporan" class="content-section">
+            <div class="header-title">
+                <h1>Laporan & Ringkasan</h1>
+                <button class="btn btn-success" onclick="window.print()">
+                    <i class="fa-solid fa-print"></i> Cetak Laporan
+                </button>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Laporan Riwayat Peminjaman Buku</h2>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID Transaksi</th>
+                                <th>Tanggal Pinjam</th>
+                                <th>Nama Siswa</th>
+                                <th>Judul Buku</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbl-laporan">
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MODAL FORM TAMBAH/EDIT BUKU -->
+    <div class="modal" id="modal-buku">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-buku-title">Tambah Data Buku</h3>
+                <button class="close-modal" onclick="closeModal('modal-buku')">&times;</button>
+            </div>
+            <form id="form-buku" onsubmit="saveBuku(event)">
+                <input type="hidden" id="buku-id">
+                <div class="form-group">
+                    <label>Kode Buku</label>
+                    <input type="text" id="buku-kode" class="form-control" placeholder="Contoh: BK-001" required>
+                </div>
+                <div class="form-group">
+                    <label>Judul Buku</label>
+                    <input type="text" id="buku-judul" class="form-control" placeholder="Judul Buku Lengkap" required>
+                </div>
+                <div class="form-group">
+                    <label>Penulis</label>
+                    <input type="text" id="buku-penulis" class="form-control" placeholder="Nama Penulis" required>
+                </div>
+                <div class="form-group">
+                    <label>Jumlah Stok</label>
+                    <input type="number" id="buku-jumlah" class="form-control" min="1" placeholder="1" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" style="background:#334155; color:white;" onclick="closeModal('modal-buku')">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL FORM TAMBAH/EDIT SISWA -->
+    <div class="modal" id="modal-siswa">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-siswa-title">Tambah Data Siswa</h3>
+                <button class="close-modal" onclick="closeModal('modal-siswa')">&times;</button>
+            </div>
+            <form id="form-siswa" onsubmit="saveSiswa(event)">
+                <input type="hidden" id="siswa-id">
+                <div class="form-group">
+                    <label>NIS</label>
+                    <input type="text" id="siswa-nis" class="form-control" placeholder="Nomor Induk Siswa" required>
+                </div>
+                <div class="form-group">
+                    <label>Nama Lengkap</label>
+                    <input type="text" id="siswa-nama" class="form-control" placeholder="Nama Lengkap Siswa" required>
+                </div>
+                <div class="form-group">
+                    <label>Kelas</label>
+                    <input type="text" id="siswa-kelas" class="form-control" placeholder="Contoh: X IPA 1" required>
+                </div>
+                <div class="form-group">
+                    <label>No. Telepon / HP</label>
+                    <input type="text" id="siswa-hp" class="form-control" placeholder="08xxxxxxxxxx" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" style="background:#334155; color:white;" onclick="closeModal('modal-siswa')">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script src="assets/script.js"></script>
+</body>
+</html>
